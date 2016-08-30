@@ -3,6 +3,7 @@
 
     const _defaultOptions = {
         once: 'boolean'
+        // 添加 scope
     }
     const EventFire = function() {
         this._enabled = true;
@@ -93,7 +94,7 @@
     };
 
     EventFire.prototype.once = function() {
-        var argsArr = Array.prototype.lice.call(arguments),
+        var argsArr = Array.prototype.slice.call(arguments),
             last = argsArr.length - 1;
         if(Util.isObject(argsArr[last]) && argsArr.length > 1){
             // 把最后一个 {event1: function(){}, event2: function(){}} 形式的参数
