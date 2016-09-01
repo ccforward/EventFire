@@ -4,6 +4,7 @@ var e = new EventFire()
 
 
 var fn = function(ev) {
+    console.log(ev.data)
     console.log(1111); 
 }
 var fn2 = function(ev) {
@@ -23,7 +24,7 @@ e.once(/^eventreg/, function(){
 console.log(e.listeners('event1'))
 console.log(e.listeners('event2'))
 
-e.fire('event1')
+e.fire('event1', {a: 111})
 e.fire('event1')
 
 e.fire('event2')

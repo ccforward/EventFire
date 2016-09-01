@@ -8,13 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ccforward/EventFire"
+    "url": "git@github.com:/ccforward/EventFire"
   },
   "keywords": [
     "event",
-    "EventFirere",
+    "EventFire",
     "custom event"
   ],
   "author": "cc <ccking@foxmail.com>",
-  "license": "ISC"
+  "homepage": "https://github.com/ccforward/EventFire",
+  "license": "MIT"
 }

@@ -1,15 +1,16 @@
 (function() {
     'use strict';
 
-    const _defaultOptions = {
-        once: 'boolean'
-        // 添加 scope
-    }
-    const EventFire = function() {
+    // 构造器初始化
+    // 使用  offAll 初始化所有的时间存储器
+    var EventFire = function() {
         this._enabled = true;
         this.offAll()
     };
-
+    const _defaultOptions = {
+        once: 'boolean'
+        // TODO 添加 scope
+    }
     const Util = {
         isObject: function(o){
             return o && typeof o === 'object' && !Array.isArray(o) && !(o instanceof Function) && !(o instanceof RegExp)
@@ -66,6 +67,8 @@
             var eventObj = {
                 fn: arg2
             }
+
+            // TODO  添加 ES6 Symbol 的支持 typeof event === 'symbol'
             if(typeof event === 'string'){
                 if(!this._handlers[event]){
                     this._handlers[event] = []
@@ -141,7 +144,6 @@
         // 5
         if(Util.isObject(events)){
             Util.separateFn(events, this.fire, this);
-
         }
 
         var eventsArr = [].concat(events),
@@ -202,6 +204,7 @@
             this._handlersAll = Util.delFn(this._handlersAll, fn)
             this._handlersRegx = Util.delFn(this._handlersRegx, fn)
 
+        // TODO  添加 ES6 Symbol的支持  typeof events === 'symbol'
         }else if(arguments.length == 1 && typeof events == 'string'){ // 5
             delete this._handlers[events]
 
