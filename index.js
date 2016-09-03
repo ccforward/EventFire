@@ -7,10 +7,13 @@
         this._enabled = true;
         this.offAll()
     };
+
+    // once scope 用于绑定(on)时添加的参数
     const _defaultOptions = {
-        once: 'boolean'
+        once: 'boolean',
+        scope: 'object'
         // TODO 添加 scope
-    }
+    };
     const Util = {
         isObject: function(o){
             return o && typeof o === 'object' && !Array.isArray(o) && !(o instanceof Function) && !(o instanceof RegExp)
@@ -20,20 +23,27 @@
             for (var k in object){
                 fn.call(scope || null, k, object[k]);
             }
+            // Symbol
+            if(Object.getOwnPorpertySymbols){
+                var symbols = Object.getOwnPorpertySymbols(object);
+                for(var i=0,len=symbols.length; i<len; i++){
+                    fn.call(scope || null, symbols[i], objectsymbols[i]);
+                }
+            }
         },
         // 删除fn  保留其他绑定的方法
         delFn: function(handlers, fn){
-            handlers = handlers || []
+            handlers = handlers || [];
             var arr = [];
             for(var i=0,len=handlers.length; i<len; i++){
-                if(handlers[i] !== fn){
+                if(handlers[i]['fn'] !== fn){
                     arr.push(handlers[i])
                 }
             }
             return arr;
         }
 
-    }
+    };
 
     /**
         1: on('event', function(){})
@@ -45,7 +55,7 @@
 
         // 3
         if(Util.isObject(arg1)){
-            separateFn(arg1, function(name, callback){
+            Util.separateFn(arg1, function(name, callback){
                 this.on(name, callback, arg2)
             }, this);
 
@@ -68,10 +78,10 @@
                 fn: arg2
             }
 
-            // TODO  添加 ES6 Symbol 的支持 typeof event === 'symbol'
-            if(typeof event === 'string'){
+            // 添加 ES6 Symbol 的支持 typeof event === 'symbol'
+            if(typeof event === 'string' || typeof event === 'symbol'){
                 if(!this._handlers[event]){
-                    this._handlers[event] = []
+                    this._handlers[event] = [];
                 }
                 handlersList = this._handlers[event];
                 eventObj.eventName = event;
@@ -86,7 +96,7 @@
 
             for(var o in arg3 || {}){
                 if(_defaultOptions[o]){
-                    eventObj[o] = arg3[o]
+                    eventObj[o] = arg3[o];
                 }
             }
 
@@ -104,15 +114,15 @@
             // 跟 {'once': true} 合并
             var newObj = {}, k;
             for(k in argsArr[last]) {
-                newObj[k] = argsArr[last][k]
+                newObj[k] = argsArr[last][k];
             }
             newObj['once'] = true;
             argsArr[last] = newObj;
         }else {
-            argsArr.push({'once': true})
+            argsArr.push({'once': true});
         }
 
-        return this.on.apply(this, argsArr)
+        return this.on.apply(this, argsArr);
     };
 
     /**
@@ -125,7 +135,7 @@
 
     EventFire.prototype.fire = function(events, data) {
         if(!this._enabled)
-            return this
+            return this;
         // 5
         if(Util.isObject(events)){
             Util.separateFn(events, this.fire, this);
@@ -158,12 +168,13 @@
                         eventName: eventsArr[i]
                     }
                 if(arguments.length>1){
-                    event.data = data
+                    event.data = data;
                 }
-                h.fn.call(this, event)
+                // h.fn.call(this, event);
+                h.fn.call('scope' in h ? h.scope : this, event);
 
                 if(h.once){
-                    onceArr.push(h)
+                    onceArr.push(h);
                 }
             }
 
@@ -179,7 +190,7 @@
             }
         }
 
-        return this
+        return this;
     };
 
     /**
@@ -192,10 +203,10 @@
     EventFire.prototype.off = function(events, fn) {
         // 4
         if(arguments.length == 1 && typeof events === 'function'){
-            fn = arguments[0]
+            fn = arguments[0];
 
             for(var h in this._handlers){
-                this._handlers[h] = Util.delFn(this.handlers[h], fn)
+                this._handlers[h] = Util.delFn(this.handlers[h], fn);
 
                 if(this._handlers[h].length === 0)
                     delete this._handlers[h];
@@ -204,8 +215,9 @@
             this._handlersAll = Util.delFn(this._handlersAll, fn)
             this._handlersRegx = Util.delFn(this._handlersRegx, fn)
 
-        // TODO  添加 ES6 Symbol的支持  typeof events === 'symbol'
-        }else if(arguments.length == 1 && typeof events == 'string'){ // 5
+        // ES6 Symbol
+        }else if(arguments.length == 1 && (typeof events == 'string' || typeof events === 'symbol') ){ // 5
+
             delete this._handlers[events]
 
         }else if(arguments.length == 2){ // 1 2

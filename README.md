@@ -2,59 +2,135 @@
 
 轻量级的事件库，支持 Node.js 和 Broswer
 
-# alpha 版
+# 1.0.0
 
-### usage alpha版
+* 添加 Symbol 绑定事件
+* 添加 scope 参数
+* bug fix
+
+
+### usage 
+
+```js
+node test.js
+```
+
+or
 
 ```js
 var EventFire = require('./index')
 // 或者
 // import EventFire from './index';
 
-var e = new EventFire()
 
+var e = new EventFire();
 
-var fn = function(ev) {
-    console.log(1111); 
+var dataFn = function(ev) {
+    console.log(ev.data)
+    console.log('event test of data parameter'); 
 }
-var fn2 = function(ev) {
-    console.log(2222); 
-}
-
-var fn3 = function(ev) {
-    console.log(3333); 
+var offFn = function(ev) {
+    console.log('event test of off() function'); 
 }
 
-// 添加监听
-e.once('event1', fn);
-e.on('event2', fn2);
+var objFn = function(ev) {
+    console.log('event test of ObjectBinding function'); 
+}
 
-// 匹配正则的监听
-e.once(/^eventreg/, function(){
-    console.log('this is a regexp fn')
-});
+e.once('event1', dataFn);
+e.on('event2', offFn);
 
+// ========== listeners Test ==========
 console.log(e.listeners('event1'))
 console.log(e.listeners('event2'))
+// ========== listeners Test ==========
 
-// 触发事件
-e.fire('event1')
-e.fire('event1')
 
+// ========== data Test ==========
+e.fire('event1', {a: 111})
+e.fire('event1')
+// ========== data Test ==========
+
+
+// ========== off Test ==========
 e.fire('event2')
+e.off('event2', offFn)
+e.fire('event2')
+// ========== off Test ==========
 
-// 触发正则匹配的事件
+
+
+// ========== object Test ==========
+e.on({eventObj: objFn})
+e.fire('eventObj')
+// ========== object Test ==========
+
+
+// ========== regexp Test ========== 
+e.on(/^eventreg/, function(){
+    console.log('this is a regexp fn')
+});
 e.fire('eventregabc')
 e.fire('eventreg123')
+// ========== regexp Test ========== 
 
-// 解绑所有事件
+
+
+
+// ========== offAll Test ========== 
 e.offAll()
 
 e.fire('event1')
 e.fire('event1')
-
 e.fire('event2')
-```
+// ========== offAll Test ========== 
 
-### version
-0.0.1
+
+// ========== Symbol Test ========== 
+var ee = new EventFire();
+
+var sbl = Symbol('test'),
+    sblCnt = 0;
+var sblFn = function(){
+    console.log('this is Symbol event test '+ ++sblCnt)
+}
+ee.on(sbl, sblFn)
+
+ee.fire(sbl);
+ee.off(sbl, sblFn);
+ee.fire(sbl);
+
+// ========== Symbol Test ========== 
+
+
+
+
+// ========== scope Test ========== 
+var es = new EventFire();
+
+es.on('scope1', function(){
+    console.log(this.name)
+},{'once': true, 'scope': {'name': 'scope test1'} });
+
+
+es.fire('scope1');
+es.fire('scope1');
+
+
+es.once('scope2', function(){
+    console.log(this.name)
+},{'scope': {'name': 'scope test2'} });
+
+
+es.fire('scope2');
+es.fire('scope2');
+
+es.on({scopeObj: function(){
+    console.log(this)
+}}, {'scope': {'name': 'scope objectFn test'} })
+
+es.fire('scopeObj');
+
+// ========== scope Test ========== 
+
+```
