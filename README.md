@@ -1,3 +1,5 @@
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coveralls Status][coveralls-image]][coveralls-url]
+
 # 自定义事件库 EventFire
 
 轻量级的事件库，支持 Node.js 和 Broswer
@@ -8,8 +10,11 @@
 * 添加 scope 参数
 * bug fix
 
+## npm
 
-### usage 
+[https://www.npmjs.com/package/EventFire](https://www.npmjs.com/package/EventFire)
+
+## Usage 
 
 ```js
 node test.js
@@ -134,3 +139,7 @@ es.fire('scopeObj');
 // ========== scope Test ========== 
 
 ```
+
+[downloads-image]: https://img.shields.io/npm/dm/EventFire.svg
+[npm-url]: https://www.npmjs.com/package/EventFire
+[npm-image]: https://img.shields.io/npm/v/EventFire.svg
