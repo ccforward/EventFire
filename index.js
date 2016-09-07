@@ -1,24 +1,25 @@
 (function() {
     'use strict';
 
-    // 构造器初始化
-    // 使用  offAll 初始化所有的时间存储器
+    // constructor initial
+    // use offAll to init all events variables
     var EventFire = function() {
         this._enabled = true;
         this.offAll()
     };
 
-    // once scope 用于绑定(on)时添加的参数
+    /* once and scope 
+     * parameters for "on" function
+    */
     const _defaultOptions = {
         once: 'boolean',
         scope: 'object'
-        // TODO 添加 scope
     };
     const Util = {
         isObject: function(o){
             return o && typeof o === 'object' && !Array.isArray(o) && !(o instanceof Function) && !(o instanceof RegExp)
         },
-        // 分解事件名和对应函数
+        // separateFn name and it's function
         separateFn: function(object, fn, scope) {
             for (var k in object){
                 fn.call(scope || null, k, object[k]);
@@ -31,7 +32,7 @@
                 }
             }
         },
-        // 删除fn  保留其他绑定的方法
+        // delete fn  save other binding functions
         delFn: function(handlers, fn){
             handlers = handlers || [];
             var arr = [];
@@ -78,7 +79,6 @@
                 fn: arg2
             }
 
-            // 添加 ES6 Symbol 的支持 typeof event === 'symbol'
             if(typeof event === 'string' || typeof event === 'symbol'){
                 if(!this._handlers[event]){
                     this._handlers[event] = [];
@@ -110,8 +110,7 @@
         var argsArr = Array.prototype.slice.call(arguments),
             last = argsArr.length - 1;
         if(Util.isObject(argsArr[last]) && argsArr.length > 1){
-            // 把最后一个 {event1: function(){}, event2: function(){}} 形式的参数
-            // 跟 {'once': true} 合并
+            // merge {'once': true} and the last Object parameter
             var newObj = {}, k;
             for(k in argsArr[last]) {
                 newObj[k] = argsArr[last][k];
@@ -171,6 +170,7 @@
                     event.data = data;
                 }
                 // h.fn.call(this, event);
+                // use ths scope parameter to instead of this
                 h.fn.call('scope' in h ? h.scope : this, event);
 
                 if(h.once){
@@ -178,7 +178,7 @@
                 }
             }
 
-            // 删除once绑定的方法
+            // delete functions of once-binding
 
             for(var k = onceArr.length - 1; k>=0; k--){
                 var fnBox = onceArr[k].eventName ?
@@ -289,14 +289,12 @@
     if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports)
             exports = module.exports = EventFire;
-        exports.EventFire = EventFire;
+            exports.EventFire = EventFire;
     } else if (typeof define === 'function' && define.amd)
-        define('emmett', [], function() {
+        define('EventFire', [], function() {
             return EventFire;
         });
     else
         this.EventFire = EventFire;
-
-
 
 })(this)

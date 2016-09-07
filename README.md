@@ -1,13 +1,13 @@
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]
 
-# 自定义事件库 EventFire
+# A custom event library - EventFire
 
-轻量级的事件库，支持 Node.js 和 Broswer
+light event library, support Node.js and Broswer.
 
 # 1.0.0
 
-* 添加 Symbol 绑定事件
-* 添加 scope 参数
+* add `Symbol` type for bind 
+* add `scope` parameter
 * bug fix
 
 ## npm
@@ -24,7 +24,7 @@ or
 
 ```js
 var EventFire = require('./index')
-// 或者
+// or ES6
 // import EventFire from './index';
 
 
