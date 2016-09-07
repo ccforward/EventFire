@@ -1,4 +1,4 @@
-[![NPM version][npm-image]][npm-url]
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]
 
 # 自定义事件库 EventFire
 
@@ -143,3 +143,6 @@ es.fire('scopeObj');
 [downloads-image]: https://img.shields.io/npm/dm/EventFire.svg
 [npm-url]: https://www.npmjs.com/package/EventFire
 [npm-image]: https://img.shields.io/npm/v/EventFire.svg
+
+[travis-url]: https://travis-ci.org/ccforward/EventFire
+[travis-image]: https://travis-ci.org/ccforward/EventFire.svg?branch=master
